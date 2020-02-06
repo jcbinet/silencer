@@ -24,7 +24,7 @@ class GtkThread(Thread):
 
 
 class Silencer:
-    def __init__(self, mic_key, mic_sound_card):
+    def __init__(self, mic_key, mic_sound_card, mic_hold_to_talk):
         # Indicator init
         self.app = 'Silencer'
         self.muted_icon_path = dir_path + '/icons/indicator-low.png'
@@ -42,6 +42,7 @@ class Silencer:
         self.mic_key = mic_key
         self.mic_sound_card = mic_sound_card
         self.mic_muted = True
+        self.mic_hold_to_talk = mic_hold_to_talk
 
         # Threads
         self.threads = []
@@ -96,21 +97,33 @@ class Silencer:
 
     # When a keyboard key is pressed
     def on_press(self, key):
-        if self.mic_key in str(key) and self.mic_muted is True:
-            self.mic_muted = False
-            self.toggle_mic()
-            self.indicator.set_icon(dir_path + '/icons/indicator-full.png')
+        if self.mic_key in str(key):
+            if self.mic_hold_to_talk is True:
+                self.unmute_mic()
+            elif self.mic_hold_to_talk is False:
+                if self.mic_muted is True:
+                    self.unmute_mic()
+                elif self.mic_muted is False:
+                    self.mute_mic()
 
     # When a keyboard key is released
     def on_release(self, key):
-        if self.mic_key in str(key) and self.mic_muted is False:
-            self.mic_muted = True
-            self.toggle_mic()
-            self.indicator.set_icon(dir_path + '/icons/indicator-low.png')
+        if self.mic_key in str(key) and self.mic_hold_to_talk is True:
+            self.mute_mic()
 
-    # Toggle mic capture
-    def toggle_mic(self):
-        os.system('amixer -c {0} set Mic toggle'.format(self.mic_sound_card))
+    # Mute the microphone
+    def mute_mic(self):
+        if self.mic_muted is False:
+            self.mic_muted = True
+            self.set_mic_capture(False)
+            self.indicator.set_icon(self.muted_icon_path)
+
+    # Unmute the microphone
+    def unmute_mic(self):
+        if self.mic_muted is True:
+            self.mic_muted = False
+            self.set_mic_capture(True)
+            self.indicator.set_icon(self.not_muted_icon_path)
 
     # Set mic capture manually
     def set_mic_capture(self, on):
@@ -119,10 +132,12 @@ class Silencer:
 
 # Parse arguments
 parser = argparse.ArgumentParser(description='Silencer')
+parser.set_defaults(ht=True)
 parser.add_argument('-k', default='f8', help='Toggle key')
 parser.add_argument('-c', default=1, help='Sound card id')
+parser.add_argument('--no-hold', dest='ht', help='No need to hold key bind to talk', action='store_false')
 
 args = parser.parse_args()
 
 # Start
-Silencer(args.k, args.c)
+Silencer(args.k, args.c, args.ht)
