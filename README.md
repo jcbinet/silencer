@@ -21,3 +21,7 @@ optional arguments:
   -c C        Sound card id
   --no-hold   No need to hold key bind to talk
 ```
+
+**If you want to close the terminal without closing Silencer:**
+
+`nohup silencer.py [-h] [-k K] [-c C] [--no-hold] &`
