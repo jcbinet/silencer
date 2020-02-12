@@ -1,4 +1,4 @@
-# Silencer 0.3.2
+# Silencer 0.3.3
 
 Push to talk functionality with top bar indicator for Ubuntu.
 
@@ -13,11 +13,19 @@ sudo apt install gir1.2-appindicator3-0.1
 
 ## Config
 Configurations are stored in `silencer-config.json`:
+
+`keybind:` key for mic
+
+`hold_to_talk:` Hold to talk mode | Toggle mode
+
+`sound_card_id:` Sound card id of mic
+
+Default values are:
 ```json
 {
-  "keybind": "f8" // Key for mic,
-  "hold_to_talk": true // Hold to talk mode | Toggle mode,
-  "sound_card_id": 3 // Sound card id of mic
+  "keybind": "f8",
+  "hold_to_talk": true,
+  "sound_card_id": 1
 }
 ```
 

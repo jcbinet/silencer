@@ -63,7 +63,7 @@ class Silencer:
         menu = Gtk.Menu()
 
         # About
-        about_item = Gtk.MenuItem('Silencer v0.3.2  💀')
+        about_item = Gtk.MenuItem('Silencer v0.3.3  💀')
         menu.append(about_item)
 
         # Hold to talk toggle
