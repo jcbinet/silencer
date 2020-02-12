@@ -1,8 +1,9 @@
-# Silencer 0.1.0
+# Silencer 0.3.1
 
-Push to talk functionality with top bar indicator for Ubuntu using Gtk AppIndicator3 and amixer.
+Push to talk functionality with top bar indicator for Ubuntu.
 
 ## Prerequisites
+
 Install required dependencies.
 
 ```shell script
@@ -11,17 +12,16 @@ sudo apt install gir1.2-appindicator3-0.1
 ```
 
 ## Usage
-
+Using python directly:
 ```shell script
-usage: silencer.py [-h] [-k K] [-c C] [--no-hold]
-
-optional arguments:
-  -h, --help  show this help message and exit
-  -k K        Toggle key
-  -c C        Sound card id
-  --no-hold   No need to hold key bind to talk
+python3 silencer.py
+```
+Or using as executable:
+```shell script
+./silencer.py
 ```
 
 **If you want to close the terminal without closing Silencer:**
-
-`nohup silencer.py [-h] [-k K] [-c C] [--no-hold] &`
+```shell script
+nohup silencer.py &
+```
