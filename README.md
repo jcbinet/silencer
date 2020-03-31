@@ -1,4 +1,4 @@
-# Silencer 0.3.3
+# Silencer 0.4.0
 
 Push to talk functionality with top bar indicator for Ubuntu.
 
