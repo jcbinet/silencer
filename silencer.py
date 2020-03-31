@@ -84,7 +84,7 @@ class Silencer:
         menu = Gtk.Menu()
 
         # About
-        about_item = Gtk.MenuItem('Silencer v0.4.0  💀')
+        about_item = Gtk.MenuItem('Silencer v0.4.1  💀')
         menu.append(about_item)
 
         # Separator
