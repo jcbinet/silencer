@@ -36,9 +36,9 @@ class Silencer:
         self.config = config
         self.mic_key = config['keybind']
         self.mic_sound_card = config['sound_card_id']
-        if (config['hold_to_talk'] == True or config['hold_to_talk'] == self.MODE_PUSH_TO_TALK):
+        if config['hold_to_talk'] is True or config['hold_to_talk'] == self.MODE_PUSH_TO_TALK:
             self.mode = self.MODE_PUSH_TO_TALK
-        elif (config['hold_to_talk'] == False or config['hold_to_talk'] == self.MODE_TOGGLE_TO_TALK):
+        elif config['hold_to_talk'] is False or config['hold_to_talk'] == self.MODE_TOGGLE_TO_TALK:
             self.mode = self.MODE_TOGGLE_TO_TALK
         else:
             self.mode = self.MODE_INTELLIGENT_DETECT
@@ -53,6 +53,9 @@ class Silencer:
         self.mic_keybind_setup_dialog = None
         self.mic_keybind_setup_key = None
         self.mic_keybind_setup_dialog_key_label = None
+        self.tmt_toggle_item = None
+        self.ppt_toggle_item = None
+        self.intelligent_toggle_item = None
 
         # Indicator init
         self.app = 'Silencer'
@@ -168,32 +171,34 @@ class Silencer:
         if self.mic_keybind_setup_active:
             self.mic_keybind_setup_key = str(key)
             self.mic_keybind_setup_dialog_key_label.set_label(self.mic_keybind_setup_key)
-        
-        elif self.mode == self.MODE_INTELLIGENT_DETECT and self.mic_key in str(key):
-            if self.start_press == None:
-                self.start_press = datetime.datetime.now()
-            self.unmute_mic()
 
         elif self.mic_key in str(key):
+            # Push to talk
             if self.mode == self.MODE_PUSH_TO_TALK:
                 self.unmute_mic()
-            else:
+            # Toggle to talk
+            elif self.mode == self.MODE_TOGGLE_TO_TALK:
                 if self.mic_muted is True:
                     self.unmute_mic()
                 elif self.mic_muted is False:
                     self.mute_mic()
+            # Intelligent detect
+            elif self.mode == self.MODE_INTELLIGENT_DETECT:
+                if self.start_press is None:
+                    self.start_press = datetime.datetime.now()
+                self.unmute_mic()
 
     # When a keyboard key is released
     def on_release(self, key):
-        if self.mic_key in str(key) and self.mode == self.MODE_INTELLIGENT_DETECT:
-            end_press = datetime.datetime.now()
-            diff_press = end_press - self.start_press
-            if (diff_press > datetime.timedelta(milliseconds=250)):
+        if self.mic_key in str(key):
+            if self.mode == self.MODE_PUSH_TO_TALK:
                 self.mute_mic()
-                self.start_press = None
-
-        elif self.mic_key in str(key) and self.mode == self.MODE_PUSH_TO_TALK:
-            self.mute_mic()
+            elif self.mode == self.MODE_INTELLIGENT_DETECT:
+                end_press = datetime.datetime.now()
+                diff_press = end_press - self.start_press
+                if diff_press > datetime.timedelta(milliseconds=250):
+                    self.mute_mic()
+                    self.start_press = None
 
     # Mute the microphone
     def mute_mic(self):
