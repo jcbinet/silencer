@@ -190,7 +190,7 @@ class Silencer:
 
     # When a keyboard key is released
     def on_release(self, key):
-        if self.mic_key in str(key):
+        if self.mic_keybind_setup_active is False and self.mic_key in str(key):
             if self.mode == self.MODE_PUSH_TO_TALK:
                 self.mute_mic()
             elif self.mode == self.MODE_INTELLIGENT_DETECT:
